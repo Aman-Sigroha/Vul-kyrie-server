@@ -22,4 +22,4 @@ app.post("/data", async (req, res) => {
   res.send({ status: "success" });
 });
 
-app.listen(3000, () => console.log("Server running on port 3000"));
+app.listen("https://vul-kyrie-server.onrender.com/", () => console.log("Server running on port 3000"));
