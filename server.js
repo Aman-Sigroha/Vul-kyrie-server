@@ -27,7 +27,7 @@ app.post("/api/device", async (req, res) => {
 
   try {
     const query = `
-      INSERT INTO device (Sample_ID, Device_ID, Latitude, Longitude, Timestamp, Result, Danger) 
+      INSERT INTO reports (Sample_ID, Device_ID, Latitude, Longitude, Timestamp, Result, Danger) 
       VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *;
     `;
     const values = [Sample_ID, Device_ID, Latitude, Longitude, Timestamp || new Date(), Result, Danger];
