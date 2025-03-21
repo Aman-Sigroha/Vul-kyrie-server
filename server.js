@@ -35,7 +35,7 @@ app.post("/api/device", async (req, res) => {
     res.status(201).json({ message: "Data inserted successfully", data: result.rows[0] });
   } catch (error) {
     console.error("Database Error:", error);
-    res.status(500).json({ error: "Database error" });
+    res.status(500).json({ error: error });
   }
 });
 
