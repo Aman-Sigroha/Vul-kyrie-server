@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const { Pool } = require("pg");
 
@@ -5,21 +6,20 @@ const app = express();
 app.use(express.json());
 
 const pool = new Pool({
-  user: "your_username",
-  host: "your_db_host",
-  database: "your_db_name",
-  password: "your_password",
-  port: 5432,
+  user: process.env.DB_USER,
+  host: process.env.DB_HOST,
+  database: process.env.DB_NAME,
+  password: process.env.DB_PASSWORD,
+  port: process.env.DB_PORT || 5432, 
 });
 
-app.get('/', (req, res) => {
-res.send('VULKAIRE');
+app.get("/", (req, res) => {
+  res.send("VULKAIRE");
 });
 
 app.post("/api/device", async (req, res) => {
   const { Sample_ID, Device_ID, Latitude, Longitude, Timestamp, Result, Danger } = req.body;
 
- 
   if (!Sample_ID || !Device_ID || !Latitude || !Longitude || !Danger) {
     return res.status(400).json({ error: "Missing required fields" });
   }
@@ -39,4 +39,5 @@ app.post("/api/device", async (req, res) => {
   }
 });
 
-app.listen(8000, () => console.log("Server running on port 3000"));
+const PORT = process.env.PORT || 8000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
