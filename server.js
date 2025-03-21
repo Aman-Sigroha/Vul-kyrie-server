@@ -16,10 +16,27 @@ app.get('/', (req, res) => {
 res.send('VULKAIRE');
 });
 
-app.post("/data", async (req, res) => {
-  const { diclofenac, ketoprofen } = req.body;
-  await pool.query("INSERT INTO test_results (diclofenac, ketoprofen) VALUES ($1, $2)", [diclofenac, ketoprofen]);
-  res.send({ status: "success" });
+app.post("/api/device", async (req, res) => {
+  const { Sample_ID, Device_ID, Latitude, Longitude, Timestamp, Result, Danger } = req.body;
+
+ 
+  if (!Sample_ID || !Device_ID || !Latitude || !Longitude || !Danger) {
+    return res.status(400).json({ error: "Missing required fields" });
+  }
+
+  try {
+    const query = `
+      INSERT INTO device (Sample_ID, Device_ID, Latitude, Longitude, Timestamp, Result, Danger) 
+      VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *;
+    `;
+    const values = [Sample_ID, Device_ID, Latitude, Longitude, Timestamp || new Date(), Result, Danger];
+
+    const result = await pool.query(query, values);
+    res.status(201).json({ message: "Data inserted successfully", data: result.rows[0] });
+  } catch (error) {
+    console.error("Database Error:", error);
+    res.status(500).json({ error: "Database error" });
+  }
 });
 
 app.listen(8000, () => console.log("Server running on port 3000"));
