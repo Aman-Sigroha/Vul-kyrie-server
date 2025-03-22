@@ -18,6 +18,18 @@ app.get("/", (req, res) => {
   res.send("VULKAIRE");
 });
 
+app.get("/api/device", async (req, res) => {
+  try {
+    const query = "SELECT * FROM reports ORDER BY Timestamp DESC;";
+    const result = await pool.query(query);
+    
+    res.status(200).json({ data: result.rows });
+  } catch (error) {
+    console.error("Database Error:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
 app.post("/api/device", async (req, res) => {
   const { Sample_ID, Device_ID, Latitude, Longitude, Timestamp, Result, Danger } = req.body;
 
